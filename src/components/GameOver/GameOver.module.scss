@@ -1,0 +1,4 @@
+@import "../../constants/cssColors.scss";
+.gameOver {
+  background: linear-gradient(0deg, $warning 0%, $danger 100%);
+}

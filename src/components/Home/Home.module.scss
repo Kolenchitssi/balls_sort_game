@@ -1,0 +1,23 @@
+@import "../../constants/cssColors.scss";
+
+.home {
+  display: block;
+  text-align: center;
+  font-size: 2.5rem;
+  color: $textColor;
+  p {
+    text-align: justify;
+    color: $dark1;
+
+    &:first-letter {
+      padding-left: 20px;
+      color: $textColor;
+      font-weight: 600;
+    }
+  }
+
+  .accent {
+    color: $success;
+    font-weight: 700;
+  }
+}

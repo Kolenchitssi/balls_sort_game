@@ -1,0 +1,53 @@
+@import "./constants/cssColors.scss";
+
+.App {
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 10vh auto 5vh;
+  grid-template-areas:
+    "head        head        head"
+    "main        main        menuGame"
+    "footer     footer       footer";
+  gap: 20px 10px;
+
+  background: linear-gradient(
+    225deg,
+    $light2 0%,
+    $dark2 20%,
+    $background 50%,
+    $dark2 80%,
+    $light2 100%
+  );
+}
+
+.header {
+  grid-area: head;
+}
+
+.main {
+  grid-area: main;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 80px;
+  flex-shrink: 0;
+  padding: 36px;
+  border: 4px double $light1;
+  border-radius: 8px;
+  margin: 0 10px;
+  background: linear-gradient(45deg, $dark2 0%, $light2 50%, $dark2 100%);
+  opacity: 0.85;
+}
+
+.menu {
+  grid-area: menuGame;
+}
+.footer {
+  grid-area: footer;
+}
+
+.App-link {
+  color: rgb(112, 76, 182);
+}

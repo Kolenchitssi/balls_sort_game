@@ -1,0 +1,38 @@
+@import "../../constants/cssColors.scss";
+
+.btn {
+  min-width: 70%;
+  padding: 10px 20px;
+  font-size: 3rem;
+  font-weight: 700;
+  border-radius: 6px;
+  background: linear-gradient(180deg, $dark1 0%, $dark3 50%, $dark2 100%);
+  color: $primary;
+  cursor: pointer;
+
+  &:hover {
+    filter: hue-rotate(300deg);
+    color: $light0;
+  }
+
+  .little {
+    padding: 5px;
+    font-size: 1rem;
+  }
+}
+
+.primary {
+  color: $primary;
+}
+.secondary {
+  color: $secondary;
+}
+.danger {
+  color: $danger;
+}
+.warning {
+  color: $warning;
+}
+.success {
+  color: $success;
+}

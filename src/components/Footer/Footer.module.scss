@@ -1,0 +1,14 @@
+@import "../../constants/cssColors.scss";
+
+.footer {
+  height: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: calc(1rem + 1vmin);
+  background: linear-gradient(0deg, $dark1 0%, $dark3 50%, $dark2 100%);
+  box-shadow: 0px 5px 10px rgba($color: $dark1, $alpha: 0.55);
+  border-top: 1px solid $light1;
+  color: $primary;
+}

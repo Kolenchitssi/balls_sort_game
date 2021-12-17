@@ -1,0 +1,35 @@
+@import "../../constants/cssColors.scss";
+
+.tube {
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  box-sizing: border-box;
+  width: 80px;
+  min-width: 80px; //без этого пустые пробирки сжимаются не смотря на flex=shrink:0
+  height: 460px;
+  padding: 50px 0;
+  margin: 0 20px;
+  border: 2px solid $border;
+  border-radius: 0 0 36% 36%;
+  background: linear-gradient(90deg, $dark2 0%, $light2 50%, $dark2 100%);
+  filter: hue-rotate(10deg);
+  box-shadow: 0px -10px 25px rgba($color: $light1, $alpha: 0.35);
+
+  &[data-complete="true"] {
+    background: linear-gradient(90deg, $success 0%, $light3 50%, $success 100%);
+    border: 2px solid $success;
+    filter: saturate(1.5);
+  }
+
+  &:hover {
+    box-shadow: 0px -10px 25px rgba($color: $success, $alpha: 0.55);
+    border: 2px dotted $border;
+
+    :last-child {
+      position: relative;
+      transform: translateY(-20px);
+    }
+  }
+}
