@@ -1,8 +1,12 @@
 import React, { FC } from "react";
-import css from "./Footer.module.scss";
+import styles from "./Footer.module.scss";
 
-const Footer: FC = () => {
-  return <div className={css.footer + " footer"}>2021</div>;
+type Props = {
+  className: String;
+};
+
+const Footer: FC<Props> = ({ className }) => {
+  return <div className={`${styles.footer} ${className}`}>2021</div>;
 };
 
 export default Footer;

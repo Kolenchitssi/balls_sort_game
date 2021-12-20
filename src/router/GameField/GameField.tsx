@@ -1,9 +1,9 @@
 import React, { FC, useState, useEffect } from "react";
-import Tube from "../Tube/Tube2";
+import Tube from "../../components/Tube/Tube2";
 import css from "./GameField.module.scss";
-// import { TUBES } from "../../constants/gameConstansts";
+
 import { isCompleted } from "../../utils/isComleted";
-import Button from "../../UI/Button/Button";
+import Button from "../../components/ui/Button/Button";
 import TUBES_3 from "../../constants/easyLevel_3tubes";
 import TUBES_4 from "../../constants/normLevel_4tubes";
 import TUBES_5 from "../../constants/difficultLevel_5tubes";
@@ -14,11 +14,19 @@ import {
   selectLevelGame,
 } from "../../store/reducers/gameSlice";
 
-//принять сложность и в зависимости от нее  присвоить tubes=TUBES_3 4 5
-const GameField: FC = ({}) => {
+import useSound from "use-sound";
+import soundDing from "../../assets/audio/bleep.mp3";
+
+type Props = {
+  className: String;
+};
+
+const GameField: FC<Props> = ({ className }) => {
   const dispatch = useAppDispatch();
   const difficult = useAppSelector(selectDifficultGame);
   const level = useAppSelector(selectLevelGame);
+
+  const [playDingSound] = useSound(soundDing);
 
   let tubesArr: number[][][] = [[[]]];
   const [tubes, setTubes] = useState(tubesArr[level]);
@@ -48,21 +56,21 @@ const GameField: FC = ({}) => {
   }, [difficult, level]);
 
   return (
-    <div className={css.gameField + " main"}>
+    <div className={`${css.gameField}  ${className}`}>
       <div className={css.lvl}>
-        difficult : {difficult} level: {level + 1}{" "}
+        difficult : {difficult} level: {level + 1}
       </div>
       {win ? (
         <div className={css.winner}>
-          {" "}
-          <h2>Congratulations you win !!!</h2>{" "}
+          <h2>Congratulations you win !!!</h2>
           <Button
-            text="Next lvl &#8594;"
-            classBtn=""
-            handler={() => {
+            onClick={() => {
+              playDingSound();
               dispatch(nextLevelGame());
             }}
-          />
+          >
+            Next lvl &#8594;
+          </Button>
         </div>
       ) : null}
       {tubes.map((item, index) => {

@@ -1,20 +1,19 @@
 // этот файл не рабочий потом  посмотрю подключен Tube2
 
 import React, { FC, useState } from "react";
-import { IMovingBall } from "../../models/IMovingBall";
 import { getEventAttribute } from "../../utils/getEventAttribute";
 import Ball from "../Ball/Ball";
 import css from "./Tube.module.scss";
 
-interface ITube {
+type Props = {
   numberTube: number;
   balls: number[];
   complete: boolean;
   tubesArr: number[][];
   setTubes: Function;
-}
+};
 
-const Tube: FC<ITube> = ({
+const Tube: FC<Props> = ({
   numberTube,
   balls,
   complete,
@@ -113,7 +112,7 @@ const Tube: FC<ITube> = ({
         event.preventDefault();
 
         // console.log("event Tube onDragOver");
-        const numberFinishPlace = getEventAttribute(event, "data-number_tube");
+        const numberFinishPlace = getEventAttribute(event, "data-number-tube");
         // console.log("numberFinishPlace", numberFinishPlace);
 
         if (numberFinishPlace) {

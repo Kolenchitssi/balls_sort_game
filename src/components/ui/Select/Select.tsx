@@ -1,16 +1,18 @@
 import React, { FC } from "react";
-import css from "./Select.module.scss";
+import styles from "./Select.module.scss";
 
-interface ISelect {
-  handler: Function;
-}
+type Props = {
+  className?: string;
+  [x: string]: unknown;
+};
 
-const Select: FC<ISelect> = ({ handler }) => {
+const Select: FC<Props> = ({ ...props }) => {
   return (
     <select
       name="difficulty"
-      className={css.select}
-      onChange={(event) => handler(event.target.value)}
+      className={styles.select}
+      // onChange={(event) => handler(event.target.value)}
+      {...props}
       defaultValue={4}
     >
       <option value={3}>easy </option>

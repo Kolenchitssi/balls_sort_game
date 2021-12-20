@@ -1,16 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-// import { TUBES } from "../../constants/gameConstansts";
-import { IMovingBall } from "../../models/IMovingBall";
 import { RootState } from "../store";
 
-interface IState {
+type InitState = {
   difficultGame: number;
   levelGame: number;
   // tubesMap: number[][];
   // history: Array<number[][]>; //массив  tubesMap по состоянию на каждый ход 0-начало и до  последнего
-}
+};
 
-const initialState: IState = {
+const initialState: InitState = {
   // tubesMap: TUBES,
   difficultGame: 4,
   levelGame: 0,
@@ -28,7 +26,7 @@ export const gameSlice = createSlice({
     },
     nextLevelGame: (state) => {
       state.levelGame += 1;
-      console.log(state);
+      // console.log(state);
     },
   },
 });
