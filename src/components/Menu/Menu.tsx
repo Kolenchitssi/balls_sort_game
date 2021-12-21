@@ -33,7 +33,6 @@ const Menu: FC<Props> = ({ className }) => {
     playStartSound();
     dispatch(setLevelGame(1));
     dispatch(resetNumberOfMoves());
-    // navigate(routePath.START);
   };
 
   const clickHandlerUndo = () => {
@@ -57,11 +56,7 @@ const Menu: FC<Props> = ({ className }) => {
       >
         New Game
       </MyLink>
-      <MyLink
-        to={routePath.HOME}
-        // onClick={clickHandlerRules}
-        className="Primary"
-      >
+      <MyLink to={routePath.HOME} className="Primary">
         Rules
       </MyLink>
       <Button onClick={clickHandlerUndo} className="Primary">

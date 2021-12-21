@@ -7,7 +7,7 @@
   align-items: center;
   box-sizing: border-box;
   width: 80px;
-  min-width: 80px; //без этого пустые пробирки сжимаются не смотря на flex=shrink:0
+  min-width: 80px;
   height: 460px;
   padding: 50px 0;
   margin: 0 20px;

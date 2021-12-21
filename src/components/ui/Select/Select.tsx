@@ -11,12 +11,11 @@ const Select: FC<Props> = ({ ...props }) => {
     <select
       name="difficulty"
       className={styles.select}
-      // onChange={(event) => handler(event.target.value)}
       {...props}
       defaultValue={4}
     >
       <option value={3}>easy </option>
-      <option value={4}>normall</option>
+      <option value={4}>normal</option>
       <option value={5}>difficult</option>
     </select>
   );

@@ -6,12 +6,10 @@ type InitState = {
   difficultGame: number;
   levelGame: number;
   numberOfMoves: number;
-  // tubesMap: number[][];
-  history: Array<number[][]>; //массив  tubesMap по состоянию на каждый ход 0-начало и до  последнего
+  history: Array<number[][]>;
 };
 
 const initialState: InitState = {
-  // tubesMap: TUBES,
   difficultGame: 4,
   levelGame: 1,
   numberOfMoves: NUMBER_OF_MOVES,
@@ -43,18 +41,14 @@ export const gameSlice = createSlice({
       }
     },
     addMoveToHistory: (state, action: PayloadAction<number[][]>) => {
-      console.log("addMoveToHistory", state.history);
-      // state.history = [...state.history, action.payload];
       state.history.push(action.payload);
     },
     undoLastMoveFromHistory: (state) => {
       if (state.history.length > 1) {
-        console.log("undo:<=", state.history);
         state.history.pop();
       }
     },
     resetHistory: (state) => {
-      console.log("reset history");
       state.history = [];
     },
   },
@@ -71,11 +65,6 @@ export const {
   undoLastMoveFromHistory,
   resetHistory,
 } = gameSlice.actions;
-
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state) => state.counter.value)`
-//* Селекторы также могут быть определены в строке, где они используются Например: `useSelector ((state) => state.game.difficultGame)`
 
 export const selectDifficultGame = (state: RootState) =>
   state.game.difficultGame;

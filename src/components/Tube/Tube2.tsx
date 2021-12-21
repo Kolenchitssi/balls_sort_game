@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import {
-  addMoveToHistory,
   decrementNumberOfMoves,
   selectNumberOfMoves,
 } from "../../store/reducers/gameSlice";
@@ -32,26 +31,12 @@ type Props = {
 let numberTubeStart: number;
 let numberTubeFinish: number;
 let colorBallStart: number;
-// let indexBallStart: number;
 
 const onDragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
   numberTubeStart = Number(getEventAttribute(event, "data-number-tube"));
   colorBallStart = Number(getEventAttribute(event, "data-color-ball"));
   event.currentTarget.style.opacity = "0.1%";
-  // console.dir(event.target);
-  // console.dir(event.currentTarget);
-  // console.log("numberTubeStart", numberTubeStart);
-  // indexBallStart = +getEventAttribute(event, "data-index_ball");
 };
-
-// const onDragLeaveHandler = (event: React.DragEvent<HTMLDivElement>) => {
-//   console.log("onDragLeave", event.target);
-// };
-
-// const onDragOverHandler = (event: React.DragEvent<HTMLDivElement>) => {
-//   event.preventDefault();
-//   console.log("onDragOver", event.target);
-// };
 
 const Tube: FC<Props> = ({
   numberTube,
@@ -72,36 +57,15 @@ const Tube: FC<Props> = ({
     return [...item];
   });
 
-  //? 2й способ let newTubes = JSON.parse(JSON.stringify(tubes))
-
-  //* ========ball handlers=================
-
   const onDragEndHandler = (event: React.DragEvent<HTMLDivElement>) => {
-    // console.log("onDragEndHandler", event.target);
     event.currentTarget.style.opacity = "100%";
   };
 
-  // const onDragExitHandler = (event: React.DragEvent<HTMLDivElement>) => {
-  //   console.log("onDragExit", event.target);
-  // };
-  // const onDragEnterHandler = (event: React.DragEvent<HTMLDivElement>) => {
-  //   console.log("onDragEnter", event.target);
-  // };
-  // const onDropHandler = (event: React.DragEvent<HTMLDivElement>) => {
-  //   console.log("onDropHandler ball", event.target);
-  // };
-
-  //* ======tube handlers ==============================
+  // ======tube handlers ==============================
   const onDragOverTube = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     numberTubeFinish = Number(getEventAttribute(event, "data-number-tube"));
   };
-
-  // проверить можно ли ложить шар если да то
-  // todo сохранить предыдущее состояние в историю ходов
-  // изменить матрицу
-  // проверить стали ли все шары в пробирке одинаковые если да то  пометить
-  // проверить  во всех пробирках ли помечено об успехе если да то игра выиграна
 
   const onDropHandlerTube = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -112,18 +76,15 @@ const Tube: FC<Props> = ({
       newArrTubes[numberTubeStart].pop();
       playEndMoving();
       dispatch(decrementNumberOfMoves());
-      // dispatch(addMoveToHistory(newArrTubes)); //!
-      setTubes(newArrTubes); //!
+      setTubes(newArrTubes);
 
       if (!isAnyMoves(numberOfMoves)) {
         navigate(routePath.GAMEOVER);
       }
     } else {
       playErrorMoving();
-      //todo сделать звук и какуюто подсветку красным что-ли
-      // поменять стиль на лету элемента или пробирки event.currentTarget
     }
-    // setTubes(newArrTubes);
+
     setWin(isWin(newArrTubes));
     if (isWin(newArrTubes)) {
       playSuccess();
@@ -148,12 +109,7 @@ const Tube: FC<Props> = ({
                   colorBall={item}
                   draggable={true}
                   onDragStartHandler={onDragStartHandler}
-                  // onDragLeaveHandler={onDragLeaveHandler}
-                  // onDragOverHandler={onDragOverHandler}
                   onDragEndHandler={onDragEndHandler}
-                  // onDragExitHandler={onDragExitHandler}
-                  // onDragEnterHandler={onDragEnterHandler}
-                  // onDropHandler={onDropHandler}
                   key={numberTube + "_" + index}
                 />
               );

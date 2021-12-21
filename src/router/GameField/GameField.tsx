@@ -52,23 +52,14 @@ const GameField: FC<Props> = ({ className }) => {
       tubesArr = TUBES_3;
       break;
   }
-  //!=========================================================================
-  let tubes = useAppSelector(selectPrevMoves); //! НЕ СРАБАТЫВАЕТ КАЖДЫЙ РАЗ а через раз, а пушит в историю каждый раз
 
-  console.log("currentTubesArr", tubes); //!
+  let tubes = useAppSelector(selectPrevMoves);
+
+  console.log("currentTubesArr", tubes);
 
   const setTubes = (newArrTube: number[][]) => {
     dispatch(addMoveToHistory(newArrTube));
-    // selectPrevMoves(state);
-  }; //!
-  //!====================================================================================
-
-  //? работает и без этого блока
-  // useEffect(() => {
-  //   dispatch(resetHistory());
-  //   setTubes(tubesArr[`level-${level}`]);
-  //   console.log("start page");
-  // }, []); //!*
+  };
 
   useEffect(() => {
     console.log("start useEffect");
@@ -77,8 +68,6 @@ const GameField: FC<Props> = ({ className }) => {
     setTubes(tubesArr[`level-${level}`]);
     setWin(false);
   }, [difficult, level]);
-
-  // const [tubes, setTubes] = useState(tubesArr[`level-${level}`]); //* old with useState
 
   const [win, setWin] = useState(false);
 
