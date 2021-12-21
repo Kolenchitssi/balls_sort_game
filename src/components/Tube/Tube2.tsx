@@ -1,4 +1,10 @@
 import React, { FC } from "react";
+import {
+  addMoveToHistory,
+  decrementNumberOfMoves,
+  selectNumberOfMoves,
+} from "../../store/reducers/gameSlice";
+
 import { getEventAttribute } from "../../utils/getEventAttribute";
 import { isPossible } from "../../utils/isPossible";
 import { isWin } from "../../utils/isWin";
@@ -9,15 +15,19 @@ import useSound from "use-sound";
 import soundEndMoving from "../../assets/audio/bigGurgle.mp3";
 import soundErrorMoving from "../../assets/audio/error2.mp3";
 import soundSuccess from "../../assets/audio/winTadam.mp3";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { isAnyMoves } from "../../utils/isAnyMoves";
+import { routePath } from "../../router/routePath";
+import { useNavigate } from "react-router-dom";
 
-interface ITube {
+type Props = {
   numberTube: number;
   balls: number[];
   complete: boolean;
   tubesArr: number[][];
   setTubes: Function;
   setWin: Function;
-}
+};
 
 let numberTubeStart: number;
 let numberTubeFinish: number;
@@ -43,7 +53,7 @@ const onDragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
 //   console.log("onDragOver", event.target);
 // };
 
-const Tube: FC<ITube> = ({
+const Tube: FC<Props> = ({
   numberTube,
   balls,
   complete,
@@ -54,6 +64,9 @@ const Tube: FC<ITube> = ({
   const [playEndMoving] = useSound(soundEndMoving);
   const [playErrorMoving] = useSound(soundErrorMoving);
   const [playSuccess] = useSound(soundSuccess);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const numberOfMoves = useAppSelector(selectNumberOfMoves);
 
   const newArrTubes = tubesArr.map((item) => {
     return [...item];
@@ -81,7 +94,7 @@ const Tube: FC<ITube> = ({
   //* ======tube handlers ==============================
   const onDragOverTube = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    numberTubeFinish = +getEventAttribute(event, "data-number-tube");
+    numberTubeFinish = Number(getEventAttribute(event, "data-number-tube"));
   };
 
   // проверить можно ли ложить шар если да то
@@ -98,12 +111,19 @@ const Tube: FC<ITube> = ({
       newArrTubes[Number(numberTubeFinish)].push(colorBallStart);
       newArrTubes[numberTubeStart].pop();
       playEndMoving();
+      dispatch(decrementNumberOfMoves());
+      // dispatch(addMoveToHistory(newArrTubes)); //!
+      setTubes(newArrTubes); //!
+
+      if (!isAnyMoves(numberOfMoves)) {
+        navigate(routePath.GAMEOVER);
+      }
     } else {
       playErrorMoving();
       //todo сделать звук и какуюто подсветку красным что-ли
       // поменять стиль на лету элемента или пробирки event.currentTarget
     }
-    setTubes(newArrTubes);
+    // setTubes(newArrTubes);
     setWin(isWin(newArrTubes));
     if (isWin(newArrTubes)) {
       playSuccess();

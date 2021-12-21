@@ -1,12 +1,19 @@
 import React, { FC } from "react";
-import { useNavigate } from "react-router-dom";
+
 import Button from "../ui/Button/Button";
 import MyLink from "../ui/MyLink/MyLink";
 import Select from "../ui/Select/Select";
 import styles from "./Menu.module.scss";
 import { routePath } from "../../router/routePath";
-import { useAppDispatch } from "../../store/hooks";
-import { setDifficultGame, setLevelGame } from "../../store/reducers/gameSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  incrementNumberOfMoves,
+  resetNumberOfMoves,
+  selectNumberOfMoves,
+  setDifficultGame,
+  setLevelGame,
+  undoLastMoveFromHistory,
+} from "../../store/reducers/gameSlice";
 import useSound from "use-sound";
 import soundStart from "../../assets/audio/startGame.mp3";
 import soundDing from "../../assets/audio/bleep.mp3";
@@ -17,28 +24,28 @@ type Props = {
 
 const Menu: FC<Props> = ({ className }) => {
   const dispatch = useAppDispatch();
-  // let navigate = useNavigate();
+  const numberOfMoves = useAppSelector(selectNumberOfMoves);
 
   const [playStartSound] = useSound(soundStart);
   const [playDingSound] = useSound(soundDing);
 
   const clickHandlerStart = () => {
     playStartSound();
-    dispatch(setLevelGame(0));
+    dispatch(setLevelGame(1));
+    dispatch(resetNumberOfMoves());
     // navigate(routePath.START);
   };
 
-  // const clickHandlerRules = () => {
-  //   navigate(routePath.HOME);
-  // };
-
   const clickHandlerUndo = () => {
-    console.log("press Undo");
+    dispatch(undoLastMoveFromHistory());
+    dispatch(incrementNumberOfMoves());
   };
 
   const clickHandlerSelect = (value: string) => {
     playDingSound();
     dispatch(setDifficultGame(Number(value)));
+    dispatch(setLevelGame(1));
+    dispatch(resetNumberOfMoves());
   };
   return (
     <div className={`${styles.menu} ${className}`}>
@@ -60,7 +67,7 @@ const Menu: FC<Props> = ({ className }) => {
       <Button onClick={clickHandlerUndo} className="Primary">
         &#8678; Undo
       </Button>
-      <p>{0}:moves left </p>
+      <p>{numberOfMoves}:moves left </p>
       <p className={styles.selectTxt}> Select difficulty:</p>
       <Select
         onChange={(event: React.FormEvent<HTMLSelectElement>) =>
