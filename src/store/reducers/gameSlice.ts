@@ -1,19 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-// import { TUBES } from "../../constants/gameConstansts";
-import { IMovingBall } from "../../models/IMovingBall";
+import { NUMBER_OF_MOVES } from "../../constants/gameConstansts";
 import { RootState } from "../store";
 
-interface IState {
+type InitState = {
   difficultGame: number;
   levelGame: number;
-  // tubesMap: number[][];
-  // history: Array<number[][]>; //массив  tubesMap по состоянию на каждый ход 0-начало и до  последнего
-}
+  numberOfMoves: number;
+  history: Array<number[][]>;
+};
 
-const initialState: IState = {
-  // tubesMap: TUBES,
+const initialState: InitState = {
   difficultGame: 4,
-  levelGame: 0,
+  levelGame: 1,
+  numberOfMoves: NUMBER_OF_MOVES,
+  history: [[]],
 };
 
 export const gameSlice = createSlice({
@@ -28,21 +28,57 @@ export const gameSlice = createSlice({
     },
     nextLevelGame: (state) => {
       state.levelGame += 1;
-      console.log(state);
+    },
+    resetNumberOfMoves: (state) => {
+      state.numberOfMoves = NUMBER_OF_MOVES;
+    },
+    decrementNumberOfMoves: (state) => {
+      state.numberOfMoves -= 1;
+    },
+    incrementNumberOfMoves: (state) => {
+      if (state.numberOfMoves < 50) {
+        state.numberOfMoves += 1;
+      }
+    },
+    addMoveToHistory: (state, action: PayloadAction<number[][]>) => {
+      state.history.push(action.payload);
+    },
+    undoLastMoveFromHistory: (state) => {
+      if (state.history.length > 1) {
+        state.history.pop();
+      }
+    },
+    resetHistory: (state) => {
+      state.history = [];
     },
   },
 });
 
-export const { setDifficultGame, setLevelGame, nextLevelGame } =
-  gameSlice.actions;
-
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state) => state.counter.value)`
-//* Селекторы также могут быть определены в строке, где они используются Например: `useSelector ((state) => state.game.difficultGame)`
+export const {
+  setDifficultGame,
+  setLevelGame,
+  nextLevelGame,
+  resetNumberOfMoves,
+  decrementNumberOfMoves,
+  incrementNumberOfMoves,
+  addMoveToHistory,
+  undoLastMoveFromHistory,
+  resetHistory,
+} = gameSlice.actions;
 
 export const selectDifficultGame = (state: RootState) =>
   state.game.difficultGame;
 export const selectLevelGame = (state: RootState) => state.game.levelGame;
+export const selectNumberOfMoves = (state: RootState) =>
+  state.game.numberOfMoves;
+
+export const selectPrevMoves = (state: RootState) => {
+  if (state.game.history.length > 1) {
+    return state.game.history[state.game.history.length - 1];
+  }
+  return state.game.history[0];
+};
+
+export const selectHistoryMoves = (state: RootState) => state.game.history;
 
 export default gameSlice.reducer;

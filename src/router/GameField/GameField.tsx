@@ -1,27 +1,39 @@
 import React, { FC, useState, useEffect } from "react";
-import Tube from "../Tube/Tube2";
-import css from "./GameField.module.scss";
-// import { TUBES } from "../../constants/gameConstansts";
+import Tube from "../../components/Tube/Tube2";
+import styles from "./GameField.module.scss";
+
 import { isCompleted } from "../../utils/isComleted";
-import Button from "../../UI/Button/Button";
+import Button from "../../components/ui/Button/Button";
 import TUBES_3 from "../../constants/easyLevel_3tubes";
 import TUBES_4 from "../../constants/normLevel_4tubes";
 import TUBES_5 from "../../constants/difficultLevel_5tubes";
+
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
+  addMoveToHistory,
   nextLevelGame,
+  resetHistory,
+  resetNumberOfMoves,
   selectDifficultGame,
   selectLevelGame,
+  selectPrevMoves,
 } from "../../store/reducers/gameSlice";
 
-//принять сложность и в зависимости от нее  присвоить tubes=TUBES_3 4 5
-const GameField: FC = ({}) => {
+import useSound from "use-sound";
+import soundDing from "../../assets/audio/bleep.mp3";
+
+type Props = {
+  className: String;
+};
+
+const GameField: FC<Props> = ({ className }) => {
   const dispatch = useAppDispatch();
   const difficult = useAppSelector(selectDifficultGame);
   const level = useAppSelector(selectLevelGame);
 
-  let tubesArr: number[][][] = [[[]]];
-  const [tubes, setTubes] = useState(tubesArr[level]);
+  const [playDingSound] = useSound(soundDing);
+
+  let tubesArr: { [key: string]: number[][] } = {};
 
   switch (difficult) {
     case 3:
@@ -40,29 +52,42 @@ const GameField: FC = ({}) => {
       tubesArr = TUBES_3;
       break;
   }
-  const [win, setWin] = useState(false);
+
+  let tubes = useAppSelector(selectPrevMoves);
+
+  console.log("currentTubesArr", tubes);
+
+  const setTubes = (newArrTube: number[][]) => {
+    dispatch(addMoveToHistory(newArrTube));
+  };
 
   useEffect(() => {
-    setTubes(tubesArr[level]);
+    console.log("start useEffect");
+
+    dispatch(resetHistory());
+    setTubes(tubesArr[`level-${level}`]);
     setWin(false);
   }, [difficult, level]);
 
+  const [win, setWin] = useState(false);
+
   return (
-    <div className={css.gameField + " main"}>
-      <div className={css.lvl}>
-        difficult : {difficult} level: {level + 1}{" "}
+    <div className={`${styles.gameField}  ${className}`}>
+      <div className={styles.lvl}>
+        difficult : {difficult} level: {level}
       </div>
       {win ? (
-        <div className={css.winner}>
-          {" "}
-          <h2>Congratulations you win !!!</h2>{" "}
+        <div className={styles.winner}>
+          <h2>Congratulations you win !!!</h2>
           <Button
-            text="Next lvl &#8594;"
-            classBtn=""
-            handler={() => {
+            onClick={() => {
+              playDingSound();
               dispatch(nextLevelGame());
+              dispatch(resetNumberOfMoves());
             }}
-          />
+          >
+            Next lvl &#8594;
+          </Button>
         </div>
       ) : null}
       {tubes.map((item, index) => {

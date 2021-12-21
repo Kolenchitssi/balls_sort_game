@@ -1,25 +1,44 @@
 import React, { FC } from "react";
+import {
+  decrementNumberOfMoves,
+  selectNumberOfMoves,
+} from "../../store/reducers/gameSlice";
+
 import { getEventAttribute } from "../../utils/getEventAttribute";
 import { isPossible } from "../../utils/isPossible";
 import { isWin } from "../../utils/isWin";
 import Ball from "../Ball/Ball";
 import css from "./Tube.module.scss";
+import useSound from "use-sound";
 
-interface ITube {
+import soundEndMoving from "../../assets/audio/bigGurgle.mp3";
+import soundErrorMoving from "../../assets/audio/error2.mp3";
+import soundSuccess from "../../assets/audio/winTadam.mp3";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { isAnyMoves } from "../../utils/isAnyMoves";
+import { routePath } from "../../router/routePath";
+import { useNavigate } from "react-router-dom";
+
+type Props = {
   numberTube: number;
   balls: number[];
   complete: boolean;
   tubesArr: number[][];
   setTubes: Function;
   setWin: Function;
-}
+};
 
 let numberTubeStart: number;
 let numberTubeFinish: number;
 let colorBallStart: number;
-// let indexBallStart: number;
 
-const Tube: FC<ITube> = ({
+const onDragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
+  numberTubeStart = Number(getEventAttribute(event, "data-number-tube"));
+  colorBallStart = Number(getEventAttribute(event, "data-color-ball"));
+  event.currentTarget.style.opacity = "0.1%";
+};
+
+const Tube: FC<Props> = ({
   numberTube,
   balls,
   complete,
@@ -27,83 +46,55 @@ const Tube: FC<ITube> = ({
   setTubes,
   setWin,
 }) => {
+  const [playEndMoving] = useSound(soundEndMoving);
+  const [playErrorMoving] = useSound(soundErrorMoving);
+  const [playSuccess] = useSound(soundSuccess);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const numberOfMoves = useAppSelector(selectNumberOfMoves);
+
   const newArrTubes = tubesArr.map((item) => {
     return [...item];
   });
 
-  //? 2й способ let newTubes = JSON.parse(JSON.stringify(tubes))
-
-  //* ========ball handlers=================
-
-  const onDragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
-    numberTubeStart = +getEventAttribute(event, "data-number_tube");
-    colorBallStart = +getEventAttribute(event, "data-color-ball");
-    event.currentTarget.style.opacity = "0.1%";
-    // console.dir(event.target);
-    // console.dir(event.currentTarget);
-    // console.log("numberTubeStart", numberTubeStart);
-    // indexBallStart = +getEventAttribute(event, "data-index_ball");
-  };
-
-  // const onDragLeaveHandler = (event: React.DragEvent<HTMLDivElement>) => {
-  //   console.log("onDragLeave", event.target);
-  // };
-
-  // const onDragOverHandler = (event: React.DragEvent<HTMLDivElement>) => {
-  //   event.preventDefault();
-  //   console.log("onDragOver", event.target);
-  // };
-
   const onDragEndHandler = (event: React.DragEvent<HTMLDivElement>) => {
-    // console.log("onDragEndHandler", event.target);
     event.currentTarget.style.opacity = "100%";
   };
 
-  // const onDragExitHandler = (event: React.DragEvent<HTMLDivElement>) => {
-  //   console.log("onDragExit", event.target);
-  // };
-  // const onDragEnterHandler = (event: React.DragEvent<HTMLDivElement>) => {
-  //   console.log("onDragEnter", event.target);
-  // };
-  // const onDropHandler = (event: React.DragEvent<HTMLDivElement>) => {
-  //   console.log("onDropHandler ball", event.target);
-  // };
-
-  //* ======tube handlers ==============================
+  // ======tube handlers ==============================
   const onDragOverTube = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    numberTubeFinish = +getEventAttribute(event, "data-number_tube");
+    numberTubeFinish = Number(getEventAttribute(event, "data-number-tube"));
   };
-
-  // проверить можно ли ложить шар если да то
-  // todo сохранить предыдущее состояние в историю ходов
-  // изменить матрицу
-  // проверить стали ли все шары в пробирке одинаковые если да то  пометить
-  // проверить  во всех пробирках ли помечено об успехе если да то игра выиграна
 
   const onDropHandlerTube = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    // console.log("onDropTube", event.target);
+
     // checking if it is possible to move the ball into the indicated tube
     if (isPossible(newArrTubes, numberTubeFinish, colorBallStart)) {
-      // console.log("можно", newArrTubes[numberTubeFinish].length);
       newArrTubes[Number(numberTubeFinish)].push(colorBallStart);
       newArrTubes[numberTubeStart].pop();
-    } else {
-      //todo сделать звук и какуюто подсветку красным что-ли
-      //? как поменять стиль на лету элемента или пробирки
-      //alert("нельзя");
-    }
-    setTubes(newArrTubes);
-    setWin(isWin(newArrTubes));
+      playEndMoving();
+      dispatch(decrementNumberOfMoves());
+      setTubes(newArrTubes);
 
-    // console.log(tubesArr, newArrTubes);
+      if (!isAnyMoves(numberOfMoves)) {
+        navigate(routePath.GAMEOVER);
+      }
+    } else {
+      playErrorMoving();
+    }
+
+    setWin(isWin(newArrTubes));
+    if (isWin(newArrTubes)) {
+      playSuccess();
+    }
   };
 
   return (
     <div
       className={css.tube}
-      data-number_tube={numberTube}
+      data-number-tube={numberTube}
       data-complete={complete}
       onDragOver={onDragOverTube}
       onDrop={onDropHandlerTube}
@@ -118,12 +109,7 @@ const Tube: FC<ITube> = ({
                   colorBall={item}
                   draggable={true}
                   onDragStartHandler={onDragStartHandler}
-                  // onDragLeaveHandler={onDragLeaveHandler}
-                  // onDragOverHandler={onDragOverHandler}
                   onDragEndHandler={onDragEndHandler}
-                  // onDragExitHandler={onDragExitHandler}
-                  // onDragEnterHandler={onDragEnterHandler}
-                  // onDropHandler={onDropHandler}
                   key={numberTube + "_" + index}
                 />
               );

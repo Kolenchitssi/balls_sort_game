@@ -1,61 +1,74 @@
 import React, { FC } from "react";
-import { useNavigate } from "react-router-dom";
-import Button from "../../UI/Button/Button";
-import Select from "../../UI/Select/Select";
-import css from "./Menu.module.scss";
+
+import Button from "../ui/Button/Button";
+import MyLink from "../ui/MyLink/MyLink";
+import Select from "../ui/Select/Select";
+import styles from "./Menu.module.scss";
 import { routePath } from "../../router/routePath";
-import { useAppDispatch } from "../../store/hooks";
-import { setDifficultGame, setLevelGame } from "../../store/reducers/gameSlice";
-//! import ding from "../../assets/audio/start.ogg";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  incrementNumberOfMoves,
+  resetNumberOfMoves,
+  selectNumberOfMoves,
+  setDifficultGame,
+  setLevelGame,
+  undoLastMoveFromHistory,
+} from "../../store/reducers/gameSlice";
+import useSound from "use-sound";
+import soundStart from "../../assets/audio/startGame.mp3";
+import soundDing from "../../assets/audio/bleep.mp3";
 
-const Menu: FC = () => {
+type Props = {
+  className: String;
+};
+
+const Menu: FC<Props> = ({ className }) => {
   const dispatch = useAppDispatch();
-  let navigate = useNavigate();
+  const numberOfMoves = useAppSelector(selectNumberOfMoves);
 
-  //! const dingAudio = new Audio("../../assets/audio/start.ogg");
-  //! dingAudio.src = "../../assets/audio/start.ogg";
-  //! dingAudio.currentTime = 0;
-  //! dingAudio.muted = false;
+  const [playStartSound] = useSound(soundStart);
+  const [playDingSound] = useSound(soundDing);
 
   const clickHandlerStart = () => {
-    //! dingAudio.play();
-    dispatch(setLevelGame(0));
-    navigate(routePath.START);
-  };
-
-  const clickHandlerRules = () => {
-    navigate(routePath.HOME);
+    playStartSound();
+    dispatch(setLevelGame(1));
+    dispatch(resetNumberOfMoves());
   };
 
   const clickHandlerUndo = () => {
-    console.log("press Undo");
+    dispatch(undoLastMoveFromHistory());
+    dispatch(incrementNumberOfMoves());
   };
 
-  const clickHandlerSelect = (value: Number) => {
-    //! dingAudio.play();
+  const clickHandlerSelect = (value: string) => {
+    playDingSound();
     dispatch(setDifficultGame(Number(value)));
+    dispatch(setLevelGame(1));
+    dispatch(resetNumberOfMoves());
   };
   return (
-    <div className={css.menu + " menu"}>
-      <h2 className={css.menuTitle}>Menu</h2>
-      <Button text="New Game" handler={clickHandlerStart} classBtn="Primary" />
-      <Button text="Rules" handler={clickHandlerRules} classBtn="Primary" />
-      <Button
-        text="&#8678;         Undo"
-        handler={clickHandlerUndo}
-        classBtn="Primary"
-      />
-      <p>{0}:moves left </p>
-      <p className={css.selectTxt}> Select difficulty:</p>
-      <Select handler={clickHandlerSelect} />
-
-      {/* <button
-        onClick={() => {
-          dingAudio.play();
-        }}
+    <div className={`${styles.menu} ${className}`}>
+      <h2 className={styles.menuTitle}>Menu</h2>
+      <MyLink
+        to={routePath.START}
+        onClick={clickHandlerStart}
+        className="Primary"
       >
-        SoundPlay
-      </button> */}
+        New Game
+      </MyLink>
+      <MyLink to={routePath.HOME} className="Primary">
+        Rules
+      </MyLink>
+      <Button onClick={clickHandlerUndo} className="Primary">
+        &#8678; Undo
+      </Button>
+      <p>{numberOfMoves}:moves left </p>
+      <p className={styles.selectTxt}> Select difficulty:</p>
+      <Select
+        onChange={(event: React.FormEvent<HTMLSelectElement>) =>
+          clickHandlerSelect(event.currentTarget.value)
+        }
+      />
     </div>
   );
 };

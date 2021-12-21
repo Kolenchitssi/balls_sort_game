@@ -1,7 +1,9 @@
 import React, { FC } from "react";
-import css from "./Ball.module.scss";
+import styles from "./Ball.module.scss";
+import soundStartMoving from "../../assets/audio/littleGurgle.mp3";
+import useSound from "use-sound";
 
-interface IBall {
+type Props = {
   numberTube: number;
   indexBall: number;
   colorBall: number;
@@ -13,9 +15,9 @@ interface IBall {
   onDragEnterHandler?: (event: React.DragEvent<HTMLDivElement>) => void;
   onDragOverHandler?: (event: React.DragEvent<HTMLDivElement>) => void;
   onDropHandler?: (event: React.DragEvent<HTMLDivElement>) => void;
-}
+};
 
-const Ball: FC<IBall> = ({
+const Ball: FC<Props> = ({
   numberTube,
   indexBall,
   colorBall,
@@ -28,17 +30,23 @@ const Ball: FC<IBall> = ({
   onDragOverHandler,
   onDropHandler,
 }) => {
-  const color1 = "ball" + colorBall;
-  const styleBall = css.ball + " " + css[color1];
+  const color1 = `ball${colorBall}`;
+  const styleBall = `${styles.ball} ${styles[color1]}`;
+  const [playStartMoving] = useSound(soundStartMoving);
 
   return (
     <div
-      data-number_tube={numberTube}
+      data-number-tube={numberTube}
       data-index_ball={indexBall}
       data-color-ball={colorBall}
       className={styleBall}
       draggable={draggable}
-      onDragStart={onDragStartHandler}
+      onDragStart={(event) => {
+        playStartMoving();
+        if (onDragStartHandler) {
+          onDragStartHandler(event);
+        }
+      }}
       onDragLeave={onDragLeaveHandler}
       onDragEnd={onDragEndHandler}
       onDragOver={onDragOverHandler}

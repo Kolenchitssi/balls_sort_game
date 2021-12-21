@@ -1,0 +1,51 @@
+@import "../../../constants/cssColors.scss";
+
+.lnk {
+  min-width: 70%;
+  padding: 10px 20px;
+  font-size: 2.5rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  border-radius: 6px;
+  background: linear-gradient(180deg, $dark1 0%, $dark3 50%, $dark2 100%);
+  border: 2px solid $inactive;
+  border-top-color: $inactive;
+  border-left-color: $inactive;
+  border-right-color: $dark0;
+  border-bottom-color: $dark0;
+  color: $primary;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    filter: hue-rotate(300deg);
+    color: $light0;
+  }
+
+  &:active {
+    border-top-color: $dark0;
+    border-left-color: $dark0;
+    border-right-color: $inactive;
+    border-bottom-color: $inactive;
+  }
+  .little {
+    padding: 5px;
+    font-size: 1rem;
+  }
+}
+
+.primary {
+  color: $primary;
+}
+.secondary {
+  color: $secondary;
+}
+.danger {
+  color: $danger;
+}
+.warning {
+  color: $warning;
+}
+.success {
+  color: $success;
+}

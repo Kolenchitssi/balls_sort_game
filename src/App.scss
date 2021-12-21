@@ -1,6 +1,6 @@
 @import "./constants/cssColors.scss";
 
-.App {
+.app {
   min-height: 100vh;
   box-sizing: border-box;
   display: grid;
@@ -46,8 +46,4 @@
 }
 .footer {
   grid-area: footer;
-}
-
-.App-link {
-  color: rgb(112, 76, 182);
 }

@@ -1,6 +1,6 @@
-import Error from "../components/Error/Error";
-import GameField from "../components/GameField/GameField";
-import GameOver from "../components/GameOver/GameOver";
+import Error from "./Error/Error";
+import GameField from "./GameField/GameField";
+import GameOver from "./GameOver/GameOver";
 import Home from "../components/Home/Home";
 import { IRoute } from "../models/IRoute";
 import { routePath } from "./routePath";
