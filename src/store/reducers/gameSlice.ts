@@ -43,18 +43,18 @@ export const gameSlice = createSlice({
       }
     },
     addMoveToHistory: (state, action: PayloadAction<number[][]>) => {
-      console.log("addMoveToHistory", state.history);
+      // console.log("addMoveToHistory", state.history);
       // state.history = [...state.history, action.payload];
       state.history.push(action.payload);
     },
     undoLastMoveFromHistory: (state) => {
       if (state.history.length > 1) {
-        console.log("undo:<=", state.history);
+        // console.log("undo:<=", state.history);
         state.history.pop();
       }
     },
     resetHistory: (state) => {
-      console.log("reset history");
+      // console.log("reset history");
       state.history = [];
     },
   },

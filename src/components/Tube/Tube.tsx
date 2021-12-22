@@ -34,7 +34,7 @@ const Tube: FC<Props> = ({
 
   // ======= ball handlers =============
   const onDragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
-    console.log(event);
+    // console.log(event);
 
     const numberTubeStart = getEventAttribute(event, "data-number_tube");
     const indexBallStart = getEventAttribute(event, "data-index_ball");
