@@ -8,6 +8,8 @@ type Props = {
 };
 
 const Button: FC<Props> = ({ children, className = "", ...restProps }) => {
+  console.log("render button", className);
+
   return (
     <button className={`${styles[className]}  ${styles.btn}`} {...restProps}>
       {children}
@@ -15,4 +17,5 @@ const Button: FC<Props> = ({ children, className = "", ...restProps }) => {
   );
 };
 
-export default Button;
+const MemoizeButton = React.memo(Button);
+export default MemoizeButton;

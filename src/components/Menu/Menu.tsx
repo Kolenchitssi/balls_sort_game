@@ -23,6 +23,8 @@ type Props = {
 };
 
 const Menu: FC<Props> = ({ className }) => {
+  console.log("render menu");
+
   const dispatch = useAppDispatch();
   const numberOfMoves = useAppSelector(selectNumberOfMoves);
 
@@ -78,4 +80,5 @@ const Menu: FC<Props> = ({ className }) => {
   );
 };
 
-export default Menu;
+const MemoizeMenu = React.memo(Menu);
+export default MemoizeMenu;

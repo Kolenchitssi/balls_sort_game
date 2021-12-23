@@ -10,6 +10,8 @@ type Props = {
 };
 
 const MyLink: FC<Props> = ({ children, to, className = "", ...restProps }) => {
+  console.log("render myLink to", to);
+
   return (
     <NavLink
       to={to}
@@ -21,4 +23,5 @@ const MyLink: FC<Props> = ({ children, to, className = "", ...restProps }) => {
   );
 };
 
-export default MyLink;
+const MemoizeMyLink = React.memo(MyLink);
+export default MemoizeMyLink;

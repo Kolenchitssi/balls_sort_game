@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { NUMBER_OF_MOVES } from "../../constants/gameConstansts";
 import { RootState } from "../store";
+import { createSelector } from "reselect";
 
 type InitState = {
   difficultGame: number;
@@ -77,9 +78,28 @@ export const {
 // in the slice file. For example: `useSelector((state) => state.counter.value)`
 //* Селекторы также могут быть определены в строке, где они используются Например: `useSelector ((state) => state.game.difficultGame)`
 
-export const selectDifficultGame = (state: RootState) =>
-  state.game.difficultGame;
-export const selectLevelGame = (state: RootState) => state.game.levelGame;
+export const selectDifficultGame = (state: RootState) => {
+  console.log("start selectDifficultGame");
+  return state.game.difficultGame;
+};
+
+export const reSelectDifficultGame = createSelector(
+  selectDifficultGame,
+  (difficult) => {
+    return difficult;
+  }
+);
+
+export const selectLevelGame = (state: RootState) => {
+  console.log("start selectLevelGame");
+  return state.game.levelGame;
+};
+
+export const reSelectLevelGame = createSelector(
+  selectLevelGame,
+  (level) => level
+);
+
 export const selectNumberOfMoves = (state: RootState) =>
   state.game.numberOfMoves;
 

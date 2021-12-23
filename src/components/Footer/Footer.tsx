@@ -6,6 +6,8 @@ type Props = {
 };
 
 const Footer: FC<Props> = ({ className }) => {
+  console.log("render Footer");
+
   return <div className={`${styles.footer} ${className}`}>2021</div>;
 };
 

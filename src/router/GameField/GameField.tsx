@@ -12,6 +12,8 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import {
   addMoveToHistory,
   nextLevelGame,
+  reSelectDifficultGame,
+  reSelectLevelGame,
   resetHistory,
   resetNumberOfMoves,
   selectDifficultGame,
@@ -27,9 +29,9 @@ type Props = {
 };
 
 const GameField: FC<Props> = ({ className }) => {
-  const difficult = useAppSelector(selectDifficultGame);
+  const difficult = useAppSelector(reSelectDifficultGame); //было 3 обращения при каждом ходе стало 2 с использованием reselect
+  const level = useAppSelector(reSelectLevelGame);
   const dispatch = useAppDispatch();
-  const level = useAppSelector(selectLevelGame);
 
   const [playDingSound] = useSound(soundDing);
 

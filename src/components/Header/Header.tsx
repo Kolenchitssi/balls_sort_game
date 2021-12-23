@@ -6,6 +6,8 @@ type Props = {
 };
 
 const Header: FC<Props> = ({ className }) => {
+  console.log("render Header");
+
   return <div className={`${styles.header} ${className}`}>Balls Sort</div>;
 };
 
