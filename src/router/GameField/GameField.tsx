@@ -14,8 +14,8 @@ import {
   nextLevelGame,
   resetHistory,
   resetNumberOfMoves,
-  selectDifficultGame,
-  selectLevelGame,
+  reSelectDifficultGame,
+  reSelectLevelGame,
   selectPrevMoves,
 } from "../../store/reducers/gameSlice";
 
@@ -28,8 +28,8 @@ type Props = {
 
 const GameField: FC<Props> = ({ className }) => {
   const dispatch = useAppDispatch();
-  const difficult = useAppSelector(selectDifficultGame);
-  const level = useAppSelector(selectLevelGame);
+  const difficult = useAppSelector(reSelectDifficultGame);
+  const level = useAppSelector(reSelectLevelGame);
 
   const [playDingSound] = useSound(soundDing);
 
