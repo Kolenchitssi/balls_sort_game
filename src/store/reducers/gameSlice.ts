@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { NUMBER_OF_MOVES } from "../../constants/gameConstansts";
 import { RootState } from "../store";
 
@@ -68,7 +68,18 @@ export const {
 
 export const selectDifficultGame = (state: RootState) =>
   state.game.difficultGame;
+
+export const reSelectDifficultGame = createSelector(
+  selectDifficultGame,
+  (difficult) => difficult
+);
 export const selectLevelGame = (state: RootState) => state.game.levelGame;
+
+export const reSelectLevelGame = createSelector(
+  selectLevelGame,
+  (level) => level
+);
+
 export const selectNumberOfMoves = (state: RootState) =>
   state.game.numberOfMoves;
 
