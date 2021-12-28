@@ -56,6 +56,7 @@ const GameField: FC<Props> = ({ className }) => {
   }
   //=========================================================================
   let tubes = useAppSelector(selectPrevMoves);
+  let tubes2 = useAppSelector((state) => state.game.history);
 
   // console.log("currentTubesArr", tubes); //!
 
